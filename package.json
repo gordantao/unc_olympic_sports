@@ -8,7 +8,7 @@
     "nordbord": "ts-node src/nordbord_client.ts",
     "forcedecks": "ts-node src/forcedecks_client.ts",
     "forceframe": "ts-node src/forceframe_client.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node src/nordbord_sync.ts"
   },
   "author": "",
   "license": "ISC",

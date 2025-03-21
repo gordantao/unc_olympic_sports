@@ -4,8 +4,8 @@ import { saveJsonToCsv } from "./csv";
 
 const endpoint: string = 'https://prd-use-api-externalnordbord.valdperformance.com';
 const team_id: string = '5b4690e7-25c4-4b79-927f-aec642e3c53e';
-const date: string = '1900-01-01T00:00:00.000Z'
-const EXPORT_DATA: boolean = true;
+const date: string = '2025-01-01T00:00:00.000Z'
+const EXPORT_DATA: boolean = false;
 
 async function get_data() {
   const response = await fetch(
@@ -22,8 +22,13 @@ async function get_data() {
 
 if (EXPORT_DATA) {
   get_data().then((data) => {
-    saveJsonToCsv(data.tests, 'nordboard.csv')
+    console.log(`loaded ${data.tests.length} rows of data`)
+    saveJsonToCsv(data.tests, 'nordbord.csv')
   });
 } else {
-  get_data().then((data) => console.log(data));
+  get_data().then((data) => {
+    console.log(data)
+    console.log(`loaded ${data.tests.length} rows of data`)
+    console.log(`last timestamp: ${data.tests[data.tests.length - 1].modifiedDateUtc}`)
+  });
 }

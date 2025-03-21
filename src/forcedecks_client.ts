@@ -23,8 +23,12 @@ async function get_data() {
 
 if (EXPORT_DATA) {
   get_data().then((data) => {
+    console.log(`loaded ${data.tests.length} rows of data`)
     saveJsonToCsv(data.tests, 'forcedecks.csv')
   });
 } else {
-  get_data().then((data) => console.log(data));
+  get_data().then((data) => {
+    console.log(data)
+    console.log(`loaded ${data.tests.length()} rows of data`)
+  });
 }
