@@ -5,10 +5,10 @@
   "scripts": {
     "authenticate": "ts-node src/authenticate.ts",
     "profiles": "ts-node src/profiles.ts",
-    "nordbord": "ts-node src/nordbord_client.ts",
-    "forcedecks": "ts-node src/forcedecks_client.ts",
-    "forceframe": "ts-node src/forceframe_client.ts",
-    "test": "ts-node src/nordbord_sync.ts"
+    "nordbord": "ts-node src/nordbord.ts",
+    "forcedecks": "ts-node src/forcedecks.ts",
+    "forceframe": "ts-node src/forceframe.ts",
+    "sync": "npm run nordbord && npm run forceframe && npm run forcedecks"
   },
   "author": "",
   "license": "ISC",
