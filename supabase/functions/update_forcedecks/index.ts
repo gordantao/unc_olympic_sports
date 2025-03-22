@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import {Buffer} from "https://deno.land/std/io/buffer.ts";
 
 type ForcedecksTest = {
   testId: string
