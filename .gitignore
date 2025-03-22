@@ -1,2 +1,12 @@
-.env
+# node
 node_modules/
+
+# Supabase
+supabase/.branches
+supabase/.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+.env
