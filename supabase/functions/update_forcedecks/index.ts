@@ -60,8 +60,9 @@ function normalizeTestData(test: ForcedecksTest) {
 // Supabase Environment Variables (automatically provided in Supabase Edge Functions)
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const clientId = Deno.env.get("VALD_CLIENT_ID")!;
-const clientSecret = Deno.env.get("VALD_CLIENT_SECRET")!;
+const CLIENT_ID = Deno.env.get("VALD_CLIENT_ID")!;
+const CLIENT_SECRET = Deno.env.get("VALD_CLIENT_SECRET")!;
+const TEAM_ID: string = Deno.env.get("VALD_TENANT_ID")!;
 
 // Create a Supabase client
 const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
@@ -69,11 +70,10 @@ const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 const ENDPOINT: string =
   "https://prd-use-api-extforcedecks.valdperformance.com";
 const AUTH_URL: string = "https://security.valdperformance.com/connect/token";
-const TEAM_ID: string = "5b4690e7-25c4-4b79-927f-aec642e3c53e";
 const START_DATE: Date = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
 
 async function authenticate(): Promise<string> {
-  const secret: string = Buffer.from(`${clientId}:${clientSecret}`).toString(
+  const secret: string = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
     "base64",
   );
   const response = await fetch(
