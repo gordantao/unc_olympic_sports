@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { Buffer } from "node:buffer";
 
-export type ForceframeTest = {
+type ForceframeTest = {
   profileId: string;
   testId: string;
   testDateUtc: string;
