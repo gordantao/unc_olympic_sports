@@ -44,7 +44,6 @@ type ValdTestResults<T> = {
 function normalizeTestData(test: ForcedecksTest) {
   return {
     testId: test.testId,
-    tenantId: test.tenantId,
     profileId: test.profileId,
     recordingId: test.recordingId,
     modifiedDate: test.modifiedDateUtc, // Remove 'Utc' in key name
@@ -68,7 +67,7 @@ const clientSecret = Deno.env.get("VALD_CLIENT_SECRET")!;
 const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
 const ENDPOINT: string =
-  "https://prd-use-api-externalforceframe.valdperformance.com";
+  "https://prd-use-api-extforcedecks.valdperformance.com";
 const AUTH_URL: string = "https://security.valdperformance.com/connect/token";
 const TEAM_ID: string = "5b4690e7-25c4-4b79-927f-aec642e3c53e";
 const START_DATE: Date = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
@@ -98,7 +97,7 @@ async function get_batch(date: Date): Promise<Response> {
   const token = await authenticate();
   const response = await fetch(
     ENDPOINT +
-      `/tests/v2?TenantId=${TEAM_ID}&ModifiedFromUtc=${date.toISOString()}`,
+      `/tests?TenantId=${TEAM_ID}&ModifiedFromUtc=${date.toISOString()}`,
     {
       method: "GET",
       headers: {
