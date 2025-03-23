@@ -8,7 +8,9 @@
     "nordbord": "ts-node src/nordbord.ts",
     "forcedecks": "ts-node src/forcedecks.ts",
     "forceframe": "ts-node src/forceframe.ts",
-    "sync": "npm run nordbord && npm run forceframe && npm run forcedecks"
+    "sync": "npm run nordbord && npm run forceframe && npm run forcedecks",
+    "test": "ts-node src/tests.ts",
+    "update": "ts-node src/update_forcedecks.ts"
   },
   "author": "",
   "license": "ISC",

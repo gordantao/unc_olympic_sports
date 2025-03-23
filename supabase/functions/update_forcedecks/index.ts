@@ -1,59 +1,45 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import {Buffer} from "https://deno.land/std/io/buffer.ts";
+import { Buffer } from "node:buffer";
 
 type ForcedecksTest = {
-  testId: string
-  tenantId: string
-  profileId: string
-  recordingId: string
-  modifiedDateUtc: string
-  recordedDateUtc: string
-  recordedDateOffset: number,
-  recordedDateTimezone: string,
-  analysedDateUtc: string
-  analysedDateOffset: number,
-  analysedDateTimezone: string,
-  testType: string,
-  notes: string,
-  weight: number,
+  testId: string;
+  tenantId: string;
+  profileId: string;
+  recordingId: string;
+  modifiedDateUtc: string;
+  recordedDateUtc: string;
+  recordedDateOffset: number;
+  recordedDateTimezone: string;
+  analysedDateUtc: string;
+  analysedDateOffset: number;
+  analysedDateTimezone: string;
+  testType: string;
+  notes: string;
+  weight: number;
   parameter: null | {
-    resultId: number,
-    value: number
-  },
+    resultId: number;
+    value: number;
+  };
   extendedParameters: null | [
     {
-      resultId: number,
-      value: number
-    }
-  ],
+      resultId: number;
+      value: number;
+    },
+  ];
   attributes: null | [
     {
-      attributeValueId: string
-      attributeValueName: string
-      attributeTypeId: string
-      attributeTypeName: string
-    }
-  ]
-}
+      attributeValueId: string;
+      attributeValueName: string;
+      attributeTypeId: string;
+      attributeTypeName: string;
+    },
+  ];
+};
 
 type ValdTestResults<T> = {
   tests: Array<T>;
-}
-
-// Supabase Environment Variables (automatically provided in Supabase Edge Functions)
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const clientId = Deno.env.get("CLIENT_ID")!;
-const clientSecret = Deno.env.get("CLIENT_SECRET")!;
-
-// Create a Supabase client
-const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
-
-const ENDPOINT: string = 'https://prd-use-api-externalforceframe.valdperformance.com';
-const AUTH_URL: string = 'https://security.valdperformance.com/connect/token';
-const TEAM_ID: string = '5b4690e7-25c4-4b79-927f-aec642e3c53e';
-const START_DATE: Date = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
+};
 
 function normalizeTestData(test: ForcedecksTest) {
   return {
@@ -61,7 +47,7 @@ function normalizeTestData(test: ForcedecksTest) {
     tenantId: test.tenantId,
     profileId: test.profileId,
     recordingId: test.recordingId,
-    modifiedDate: test.modifiedDateUtc, // Remove "Utc" in key name
+    modifiedDate: test.modifiedDateUtc, // Remove 'Utc' in key name
     recordedDate: test.recordedDateUtc,
     recordedDateOffset: test.recordedDateOffset,
     analysedDate: test.analysedDateUtc,
@@ -72,18 +58,35 @@ function normalizeTestData(test: ForcedecksTest) {
   };
 }
 
+// Supabase Environment Variables (automatically provided in Supabase Edge Functions)
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const clientId = Deno.env.get("VALD_CLIENT_ID")!;
+const clientSecret = Deno.env.get("VALD_CLIENT_SECRET")!;
+
+// Create a Supabase client
+const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+const ENDPOINT: string =
+  "https://prd-use-api-externalforceframe.valdperformance.com";
+const AUTH_URL: string = "https://security.valdperformance.com/connect/token";
+const TEAM_ID: string = "5b4690e7-25c4-4b79-927f-aec642e3c53e";
+const START_DATE: Date = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
+
 async function authenticate(): Promise<string> {
-  let secret: string = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+  const secret: string = Buffer.from(`${clientId}:${clientSecret}`).toString(
+    "base64",
+  );
   const response = await fetch(
     AUTH_URL,
     {
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Basic ${secret}`,
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
-      body: 'grant_type=client_credentials',
-    }
+      body: "grant_type=client_credentials",
+    },
   );
 
   const data = await response.json();
@@ -94,25 +97,27 @@ async function authenticate(): Promise<string> {
 async function get_batch(date: Date): Promise<Response> {
   const token = await authenticate();
   const response = await fetch(
-    ENDPOINT + `/tests/v2?TenantId=${TEAM_ID}&ModifiedFromUtc=${date.toISOString()}`,
+    ENDPOINT +
+      `/tests/v2?TenantId=${TEAM_ID}&ModifiedFromUtc=${date.toISOString()}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
         Authorization: token,
       },
-    }
-  )
-  return response
+    },
+  );
+  return response;
 }
 
 async function get_data() {
-  var response: Response = await get_batch(START_DATE);
-  var tests: Array<ForcedecksTest> = [];
-  var lastDate: Date = START_DATE;
+  const tests: Array<ForcedecksTest> = [];
+  let response: Response = await get_batch(START_DATE);
+  let lastDate: Date = START_DATE;
+  let data: ValdTestResults<ForcedecksTest>;
 
   while (response.status == 200) {
-    var data: ValdTestResults<ForcedecksTest> = await response.json()
-    data.tests.forEach(element => {
+    data = await response.json();
+    data.tests.forEach((element) => {
       tests.push(element);
     });
     lastDate = new Date(data.tests[data.tests.length - 1].modifiedDateUtc);
@@ -122,31 +127,39 @@ async function get_data() {
   if (response.status == 204) {
     return tests.map(normalizeTestData);
   } else {
-    throw Error(response.toString());
+    const errorJson = await response.json();
+    throw new Error(`HTTP ${response.status}: ${JSON.stringify(errorJson)}`);
   }
 }
 
-
-// Function Handler
-Deno.serve(async (req) => {
+Deno.serve(async (_req) => {
   try {
-    // Fetch new data
     const newData = await get_data();
 
-    // Insert into Supabase table
     const { error } = await supabase.from("forcedecks").insert(newData);
 
     if (error) throw error;
 
-    return new Response(JSON.stringify({ message: `${newData.length} records updated successfully` }), {
-      headers: { "Content-Type": "application/json" },
-      status: 200,
-    });
-  } catch (error) {
-    console.error("Error updating forcedecks:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { "Content-Type": "application/json" },
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({
+        message: `${newData.length} records updated successfully`,
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      },
+    );
+  } // Fetch new data
+  catch (_error: any) {
+    const error: Error = _error;
+    return new Response(
+      JSON.stringify({
+        message: `Error:\n${error.message}`,
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      },
+    );
   }
 });
