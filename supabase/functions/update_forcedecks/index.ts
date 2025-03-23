@@ -150,6 +150,7 @@ Deno.serve(async (_req) => {
       },
     );
   } // Fetch new data
+  // deno-lint-ignore no-explicit-any
   catch (_error: any) {
     const error: Error = _error;
     return new Response(
@@ -158,7 +159,7 @@ Deno.serve(async (_req) => {
       }),
       {
         headers: { "Content-Type": "application/json" },
-        status: 200,
+        status: 500,
       },
     );
   }
