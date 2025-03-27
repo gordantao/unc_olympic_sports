@@ -79,7 +79,7 @@ const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 const ENDPOINT: string =
   "https://prd-use-api-externalforceframe.valdperformance.com";
 const AUTH_URL: string = "https://security.valdperformance.com/connect/token";
-const START_DATE: Date = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
+const START_DATE: Date = new Date(Date.now() - 30 * 60 * 1000); // 30 minutes ago
 
 async function authenticate(): Promise<string> {
   const secret: string = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
