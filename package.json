@@ -11,7 +11,9 @@
     "forceframe": "ts-node src/forceframe.ts",
     "sync": "npm run nordbord && npm run forceframe && npm run forcedecks",
     "test": "ts-node src/tests.ts",
-    "update": "ts-node src/update_forcedecks.ts"
+    "update": "ts-node src/update_forcedecks.ts",
+    "trial": "ts-node src/trial.ts",
+    "definitions": "ts-node src/definitions.ts"
   },
   "author": "",
   "license": "ISC",
