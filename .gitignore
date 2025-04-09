@@ -10,3 +10,6 @@ supabase/.temp
 .env.local
 .env.*.local
 .env
+
+forcedecks.csv
+teams.csv

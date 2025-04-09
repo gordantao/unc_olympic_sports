@@ -5,6 +5,7 @@
   "scripts": {
     "authenticate": "ts-node src/authenticate.ts",
     "profiles": "ts-node src/profiles.ts",
+    "athletes": "ts-node src/athletes.ts",
     "nordbord": "ts-node src/nordbord.ts",
     "forcedecks": "ts-node src/forcedecks.ts",
     "forceframe": "ts-node src/forceframe.ts",
