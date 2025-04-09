@@ -92,16 +92,17 @@ async function authenticate(): Promise<string> {
   const token = `Bearer ${data.access_token}`;
   return token;
 }
+let AUTH_TOKEN: string = "";
 
 async function get_batch(date: Date): Promise<Response> {
-  const token = await authenticate();
+  if (AUTH_TOKEN == "") AUTH_TOKEN = await authenticate();
   const response = await fetch(
     ENDPOINT +
       `/tests?TenantId=${TEAM_ID}&ModifiedFromUtc=${date.toISOString()}`,
     {
       method: "GET",
       headers: {
-        Authorization: token,
+        Authorization: AUTH_TOKEN,
       },
     },
   );
