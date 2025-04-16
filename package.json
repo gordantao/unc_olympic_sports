@@ -7,7 +7,7 @@
     "profiles": "ts-node src/profiles.ts",
     "athletes": "ts-node src/athletes.ts",
     "nordbord": "ts-node src/nordbord.ts",
-    "forcedecks": "ts-node src/forcedecks.ts",
+    "forcedecks": "ts-node src/forcedecks-batch.ts",
     "forceframe": "ts-node src/forceframe.ts",
     "sync": "npm run nordbord && npm run forceframe && npm run forcedecks",
     "test": "ts-node src/tests.ts",
@@ -19,13 +19,15 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@supabase/supabase-js": "^2.49.4",
     "@types/dotenv": "^8.2.3",
     "@types/json2csv": "^5.0.7",
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.14.0",
     "buffer": "^6.0.3",
     "dotenv": "^16.4.7",
     "json2csv": "^6.0.0-alpha.2",
+    "supabase": "^2.20.12",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   }
 }
